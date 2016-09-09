@@ -10,14 +10,14 @@ set -x
 
 if [ -n "$TAP" ]; then
 	## del tapx interface from BRIDGE
+	ip link set $TAP down
+	sleep 0.5s
 	if [ "$BR_TYPE" = "linux" ]; then
-		ip link set $TAP down
 		ip link set $TAP nomaster
-		sleep 0.5s
-		ip tuntap del $TAP mode tap
 	else
 		ovs-vsctl del-port $BRIDGE $TAP
 	fi
+	ip tuntap del $TAP mode tap
 
 	## Delete BRIDGE if no interface
 	if [ "$BR_TYPE" = "linux" ]; then

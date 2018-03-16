@@ -1,8 +1,8 @@
 #!/bin/sh
 set -x
 
-BR_TYPE=ovs  # linux or ovs
-BRIDGE=bridge-int
+BR_TYPE=linux  # linux or ovs
+BRIDGE=br0
 TAP=$1
 
 
@@ -19,21 +19,21 @@ if [ -n "$TAP" ]; then
 	fi
 	ip tuntap del $TAP mode tap
 
-	## Delete BRIDGE if no interface
-	if [ "$BR_TYPE" = "linux" ]; then
-		IFACES=$(ip link show master $BRIDGE)
-	else
-		IFACES=$(ovs-vsctl list-ifaces $BRIDGE)
-	fi
+	### Delete BRIDGE if no interface
+	#if [ "$BR_TYPE" = "linux" ]; then
+	#	IFACES=$(ip link show master $BRIDGE)
+	#else
+	#	IFACES=$(ovs-vsctl list-ifaces $BRIDGE)
+	#fi
 
-	if [ $? -eq 0 ] && [ -z "$IFACES" ]; then
-		echo "Delete $BRIDGE.."
-		if [ "$BR_TYPE" = "linux" ]; then
-			ip link del $BRIDGE
-		else
-			ovs-vsctl del-br $BRIDGE
-		fi
-	fi
+	#if [ $? -eq 0 ] && [ -z "$IFACES" ]; then
+	#	echo "Delete $BRIDGE.."
+	#	if [ "$BR_TYPE" = "linux" ]; then
+	#		ip link del $BRIDGE
+	#	else
+	#		ovs-vsctl del-br $BRIDGE
+	#	fi
+	#fi
 else
         echo "Error: no interface specified"
         exit 1
